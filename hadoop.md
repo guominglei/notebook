@@ -1,4 +1,4 @@
-#hadoop
+# hadoop
 ## map reduce shuffle 机制
     MapReduce 中。map阶段处理的数据通过shuffle操作后，传递给reduce 阶段。
 

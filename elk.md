@@ -90,6 +90,7 @@ elk主要由三部分组成：
 
 ---
 	
+
 ## 插件讲解
 ### input
 
@@ -118,7 +119,7 @@ file  插件可以处理日志文件切割的情况。因为是定期查看文�
 		tags => []  # 添加额外的标签
 ---
 
-##插件讲解
+## 插件讲解
 ### filter插件
 
 #### grok 
@@ -135,7 +136,7 @@ https://github.com/logstash-plugins/logstash-patterns-core/tree/master/patterns.
 	}
 
 ---
-##插件讲解
+## 插件讲解
 ### filter插件
 #### aggregate  
 有事件，才有统计结果。统计周期内没有事件到来，统计结果不产生。
@@ -152,7 +153,7 @@ https://github.com/logstash-plugins/logstash-patterns-core/tree/master/patterns.
 		aggregate_maps_path => “xx” #  统计中间结果存放地址。防止统计周期中的服务停止，再开启后，统计结果清零。
 		
 ---
-##插件讲解
+## 插件讲解
 ### filter插件
 #### mutate 数据修改插件
 
@@ -171,9 +172,9 @@ https://github.com/logstash-plugins/logstash-patterns-core/tree/master/patterns.
 
 
 ---
-##插件讲解
+## 插件讲解
 ### output 插件
-####elasticsearch  
+#### elasticsearch  
 	
 	主要配置：
 		hosts => [“uri1”, “url2" ]  #   ip:port

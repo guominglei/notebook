@@ -1,4 +1,4 @@
-# zookeeper 
+s# zookeeper 
 ## 基础
     zookeeper 通过 数据结构(znode) + 原语（） + watch机制 来实现信息同步服务的。
     

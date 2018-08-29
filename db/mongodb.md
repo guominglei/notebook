@@ -1,5 +1,5 @@
-#mongodb
-##数据备份
+# mongodb
+## 数据备份
 ### 1、备份
     备份整个数据库
     a、mongodump -d 数据库名称 -c 集合名称 -o 存放地址（到目录）
@@ -7,24 +7,28 @@
     b、mongoexport -d 数据库名称 -c 集合名称 -o 导出的数据存放地址（到具体文件）。
     mongoexport -d uaas_init -c m_info_gathering -o /Users/mingleiguo/mongo-db/backup/in_out/m_info_gathering.json
 
-###2、恢复
+### 2、恢复
     a、mongorestore -d 数据库名称 -c 集合名称 -dir 存放地址/*.bson（到目录）
     导出数据
     b、mongoimport -d 数据库名称 -c 集合名称 -o 导出的数据存放地址（到具体文件）。
     mongoimport -d mapi -c m_info_gathering /Users/mingleiguo/mongo-db/backup/in_out/m_info_gathering.json
 
-dump出来的数据格式是bson二进制文件，可读性差些，不同版本之间可能有兼容性问题。数据索引都有。
-export出来的数据是json/csv/tsv 可读性好，不同版本之间通用性好。但是只有数据没有索引信息。
+说明：
+    
+    dump出来的数据格式是bson二进制文件，可读性差些，不同版本之间可能有兼容性问题。
+    但是数据索引都有。
+    export出来的数据是json/csv/tsv可读性好，不同版本之间通用性好。
+    但是只有数据没有索引信息。
 
-mongodump 有一个配套的机制。来保证在dump数据期间，产生的新的操作记录完整的保存下来。这个机制就是oplog。
-oplog 只有在集群中才能使用。
-oplog 存放于local 库中oplog.rs。 oplog机制只在全库备份时可用。  实现原理就是固定大小的collection 。记录在dump开始到dump结束时，这段时间内的操作记录。
+    mongodump 有一个配套的机制。来保证在dump数据期间，产生的新的操作记录完整的保存下来。
+    这个机制就是oplog。oplog 只有在集群中才能使用。oplog 存放于local 库中oplog.rs。 oplog机制只在全库备份时可用。 实现原理就是固定大小的collection。
+    记录在dump开始到dump结束时，这段时间内的操作记录。
 
 ## 安全机制
 ### mongodb 写操作执行过程：
     insert/update/remove/save  等操作更新集合中数据时候，先写内存journal 日志，再修改内存中的数据。 注意此时内存中的数据并没有持久化到磁盘上。每100ms journal日志会写磁盘。每60秒内存变更的数据会持久化到磁盘上。
 
-mongodb 写安全机制：写安全机制，由客户端设置。用于控制写入安全级别的机制。
+    mongodb 写安全机制：写安全机制，由客户端设置。用于控制写入安全级别的机制。
 
     unacknowledged  非确认式写入。服务器收到写请求后，就返回。服务器到底执行成功与否不清楚。
     acknowledged确认式写入。服务器收到请求，并且服务器写入journal日志后注意未持久化到硬盘就返回。
@@ -72,7 +76,7 @@ mongodb 写安全机制：写安全机制，由客户端设置。用于控制写
     如何进行读写分离呢？读写分离是做到客户端了。
     命令行下：读的话，直接连具体的从机器，进入到具体的数据库中，然后敲db.slaveOk() 就能读数据了注意，当前连接有效。
 
-###Python 客户端，可以指定读的方式。目前有5种方式：
+### Python 客户端，可以指定读的方式。目前有5种方式：
     primary
         主节点，默认模式，读操作只在主节点，如果主节点不可用，报错或者抛出异常。
         对应 mongoengine  ReadPreference.PRIMARY
@@ -102,7 +106,7 @@ mongodb 写安全机制：写安全机制，由客户端设置。用于控制写
 
 ### 具体例子
 测试环境：
-####1、准备配置文件。
+#### 1、准备配置文件。
     下边的是master配置， 拷贝slave.conf, slave2.conf修改dbpath,logpath, port
     dbpath=/Users/mingleiguo/mongo-db/RepSet/data/master
     logpath=/Users/mingleiguo/mongo-db/RepSet/logs/master.log
@@ -110,9 +114,9 @@ mongodb 写安全机制：写安全机制，由客户端设置。用于控制写
     port=27021
     replSet=rick
     #auth=True
-####2、运行
+#### 2、运行
      分别运行 mongd  -f  xx.conf
-####3、配置副本集
+#### 3、配置副本集
     $>mongo 10.200.27.185:27021
     $>rs.initiate()
     $>rs.add('10.200.27.185:27021’)
@@ -121,22 +125,22 @@ mongodb 写安全机制：写安全机制，由客户端设置。用于控制写
     $>rs.conf() # 查看副本集配置
     $>rs.status() # 查看集合状态
 
-####4、写数据 通过rs.status 可以查看出那个实例是主节点。
+#### 4、写数据 通过rs.status 可以查看出那个实例是主节点。
     $>mongo 10.200.27.185:27021
     $>use tiku
     $>db.createCollection(‘user’)
     $>db.user.insert({})
 
-####5、从节点上查看数据
+#### 5、从节点上查看数据
     $>mongo 10.200.27.185:27022
     $>rs.slaveOk()  # 没有这个，从节点不能查看数据
     $>use tiku
     $>db.user.find()
 
-默认从节点只能从主节点同步数据。可以通过设置，是从节点之间同步数据，节省同步时间。
-conf =  rs.conf()
-conf.chainingAllowed=false
-rs.reconfig(conf) 
+    默认从节点只能从主节点同步数据。可以通过设置，是从节点之间同步数据，节省同步时间。
+    conf =  rs.conf()
+    conf.chainingAllowed=false
+    rs.reconfig(conf) 
 
 ## 数据分片
     分片，只是针对集合来说，按某个映射键来把集合内的数据，分别存入不同的mongodb实例中。对前台数据操作没有啥影响。分片，就是为了增加整个系统的ram。提高数据的读写速度。
@@ -207,7 +211,7 @@ rs.reconfig(conf)
     $>sh.status() # 查看集群信息
 
 ## mongoengine 学习
-###1、切换/（多）数据库
+### 1、切换/（多）数据库
     class User(Document):
           name = StringField()
           meta = {
@@ -218,11 +222,11 @@ rs.reconfig(conf)
     self.switch_db(‘user-db-bk’)
     self.save()
 
-###2、切换/（多）集合
+### 2、切换/（多）集合
     self.switch_collection(‘collection_bk’)
     self.save()
 
-###3、  切换库并且切换表
+###3、切换库并且切换表
 mongoengine 
     swith_db switch_collection不能完成即切库又切表的需求。所以需要另写一个方法来完成。
 
@@ -278,7 +282,7 @@ mongoengine
             except Exception as e:
                 print traceback.format_exc()
 
-###4、普通连接方式
+### 4、普通连接方式
      connect(
          db='test’,
          username='user’,
@@ -286,13 +290,13 @@ mongoengine
          host='mongodb://admin:qwerty@localhost/production’
      )
 
-###5、副本集连接方式
+### 5、副本集连接方式
      from mongoengine import connect
       connect('dbname', replicaset='rs-name’)
       # MongoDB URI-style connect
       connect(host='mongodb://localhost/dbname?replicaSet=rs-name’)
 
-###6、读写分离
+### 6、读写分离
     读写分离，写不用特殊设置，默认就是主节点，为啥，因为只有一个主节点。初始化连接的时候就是连接的主连接。
     a: 实例化连接的时候指定
      con = connect(
@@ -308,7 +312,7 @@ mongoengine
            name=name).get()
     print item
 
-###7、安全写入。相当于写入确认吧。
+### 7、安全写入。相当于写入确认吧。
 
 ## WiredTiger引擎事务
 mongodb 事务不支持多文档之间的事务操作。单文档之间的事务，通过两次提交来完成的。具体如下：
@@ -456,7 +460,7 @@ snapshot_lsolation 快照隔离
 
     如果想要使用身份认证，需要在配置文件中添加auth=True
 
-###具体命令例子：
+### 具体命令例子：
     前提：use admin
     1、创建用户
     db.createUser({user:”rick”, pwd:’123456’, roles:[{role:”read”, db:”uaas"}]})
@@ -496,7 +500,7 @@ snapshot_lsolation 快照隔离
     10、合理设置oplog日志大小。避免日志没被写进去。或则日志量过大。
 
 ## map-reduce
-###命令总览
+### 命令总览
     db.runCommand({
          mapreduce: collection_name,          # 对那个集合进行操作
          map: map_function,                         # Map 映射函数
@@ -519,7 +523,7 @@ snapshot_lsolation 快照隔离
     5、最终结果输出到指定的地方。终端？临时集合？固定集合
     6、断开连接，删除执行过程中的临时数据。
 
-###map-reduce 实例
+### map-reduce 实例
     db.orders.mapReduce(
          function(){emit(this.location, 1)}, # map
          function(key, values){return Array.sum(values)}, # reduce
@@ -529,7 +533,7 @@ snapshot_lsolation 快照隔离
           }  
     )
 
-###map-reduce ,group 的区别？
+### map-reduce ,group 的区别？
     db.orders.group({
          key: {“localtion”:true},
          initial: {“names”:[]},
@@ -551,10 +555,11 @@ snapshot_lsolation 快照隔离
 
 小提示：
 1、使用Group或MapReduce时，如果一个分类只有一个元素，那么Reduce函数将不会执行，但Finalize函数还是会执行的。这时你要在Finalize函数中考虑一个元素与多个元素返回结果的一致性（比如，你把问题二中插入一个grade=3的数据看看，执行返回的grade=3时还有names集合吗？）。
+
 ## 查看性能
-###1、explain() 查询语句执行分析器
+### 1、explain() 查询语句执行分析器
      db.user.info.find({name: ‘rick’,}).hint({name:1}).explain()
-###2、慢查询日志
+### 2、慢查询日志
      慢查询日志是一个固定大小的集合。如果要加大集合大小。需要先把现有的集合删除了。然后再创建一个新的集合。具体步骤如下：
      关闭慢查询：
      db.setProfilingLevel(0)
@@ -611,13 +616,13 @@ snapshot_lsolation 快照隔离
      TEXT #使用全文索引进行查询时候的stage返回
      PROJECTION #限定返回字段时候stage的返回 
        
-###3、mongostat 工具
+### 3、mongostat 工具
      mongostat --host 10.200.27.185 --port 27021
      定期打印出如下的信息
  insert query update delete getmore command dirty used flushes vsize   res qrw arw net_in net_out conn  set repl                time
     *0    *0     *0     *0       0     4|0  0.0% 0.0%       0 3.17G 32.0M 0|0 0|0   485b   44.3k    5 rick  PRI Jul  4 11:00:42.212
 
-###4、db.stats()
+### 4、db.stats()
     查看当前数据库的信息比如 记录数，数据库大小，索引数量等等
     {
          "db" : "tiku",
@@ -633,7 +638,7 @@ snapshot_lsolation 快照隔离
          "ok" : 1
     }
 
-###5、db.serverStatus()
+### 5、db.serverStatus()
     {
          "host" : "bogon:27021",
          "version" : "3.4.5",
@@ -1255,7 +1260,7 @@ snapshot_lsolation 快照隔离
     }
 
 
-###5、db.currentOp()  # 类似于mysql 的 show processlist
+### 5、db.currentOp()  # 类似于mysql 的 show processlist
     数据当前操作命令
     {
          "inprog" : [
@@ -1322,26 +1327,26 @@ snapshot_lsolation 快照隔离
     ok: 1
     }
 
-###6、db.killOp(opid)
+### 6、db.killOp(opid)
      删除某个进程 按上例子，db.killOp(3664)
 
-##日常命令总结
-###1、根据数组长度进行筛选
+## 日常命令总结
+### 1、根据数组长度进行筛选
     db.getCollections(“xx”).find({
          field:{$size:2}
     })
     找出字段field长度为2的记录。
-###2、查找字段是否存在
+### 2、查找字段是否存在
     db.getCollections(“xx”).find({
      field:{$exists:1}
     }) 
 
-###3、类型嵌套
+### 3、类型嵌套
     db.getCollections(“xx”).find({
     ’user.name’: ‘rick'
     }) 
 
-###4、批量更新
+### 4、批量更新
     db.getCollections(“xx”).update({find}, {$set:{}}, false, true) 
 
     db.getCollection('app_question_ref').update(

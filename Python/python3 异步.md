@@ -110,7 +110,7 @@
     callbacks 队列置为空
     把原来callback添加到loop.ready 队列中。
 
-##set_result 逻辑
+## set_result 逻辑
     给result赋值。
     调用_scheddule_callbacks 把callback添加到loop.ready 队列中。
 
@@ -175,7 +175,7 @@
     deal_time = now + delay 
     执行call_at(deal_time, callback, *args)
 
-#ThreadPoolExecutor线程池，用于执行耗时任务。增加吞吐量。
+# ThreadPoolExecutor线程池，用于执行耗时任务。增加吞吐量。
     数据如何同步的？
     最大线程数是 CPU * 5
 
@@ -186,6 +186,3 @@ mongo 异步库
 
 redis 异步库 aioredis
 mysql 异步库 aiomysql
-
-
-assert 断言 只有在 __debug__ == True 才执行。

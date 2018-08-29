@@ -14,7 +14,7 @@
     7、合并文件结束后，shuffle 过程结束。
     缓冲区越大，shuffle消耗时间越小。
 
-###yarn  （yet another resource negotiator）
+### yarn  （yet another resource negotiator）
     yarn 是一个资源调度平台，负责为运算程序提供服务器运算资源。
     yarn 不清楚用户提交的程序的运行机制
     yarn 只提供运算资源的调度。用户程序向yarn 申请资源，yarn分配资源
@@ -43,7 +43,7 @@
     Scheduler 
     根据应用程序的资源需求进行资源分配，不参与应用程序具体的执行和监控等工作。资源分配的单位是Container,调度器是一个可插拔的组件。
 
-####yarn 作业流程：
+#### yarn 作业流程：
     1、用户向yarn提交应用程序，其中包括ApplicationMaster程序， 启动ApplicationMaster的命令，用户程序等。
     2、ResourceManager 为该程序分配第一个Container。并与对应的NodeManager通讯，要求这个Container中启动应用程序ApplicationMaster.
     3、ApplicationMaster首先向ResourceManager 注册，这样用户可以直接通过ResourceManager 查看应用程序运行状态，然后将为各个任务申请资源，并监控它的运行状态，直到运行结束重复4-7步骤
@@ -54,10 +54,10 @@
     8、应用程序运行完成后，AM向RM注销并关闭自己。
 
 ## hadoop单机版环境搭建
-###1、安装java
+### 1、安装java
      export JAVA_HOME
-###2、下载hadoop源码。解压到相应的目录中。
-###3、修改配置文件。
+### 2、下载hadoop源码。解压到相应的目录中。
+### 3、修改配置文件。
     配置文件位于项目目录中的。/etc/hadoop中。
 
     core-site.xml  
@@ -105,7 +105,7 @@
             <value>mapreduce_shuffle</value>
         </property>
 
-###启动命令：
+### 启动命令：
     - 首先格式化namenode
         bin/hdfs namenode -format
     - 启动hdfs
@@ -117,7 +117,7 @@
 
 ## hdfs shell命令
     下边的shell命令只是shell下HDFS文件系统的命令
-###查看文件信息：
+### 查看文件信息：
     ls 命令
     hadoop fs -ls /   查看当前hdfs系统根目录下的文件
     df 
@@ -138,7 +138,7 @@
     chown  
     hadoop fs -chown  user:gourp  file_path  更改用户权限组
 
-###目录操作：
+### 目录操作：
     mkdir 
     hadoop fs -mkdir -p path   在HDFS上创建目录
 
@@ -173,7 +173,7 @@
     appendToFile
     hadoop fs -appendToFile local_source_path  hdfs_dist_path   本地文件
 
-###HDFS 系统内文件操作
+### HDFS 系统内文件操作
     cp
     hadoop fs -cp  source_path  dist_path  HDFS系统内文件拷贝
 
@@ -192,7 +192,7 @@
     text
     hadoop fs -text hdfs_file_path  以字符形式打印
 
-##HDFS 如何保证数据完整性？
+## HDFS 如何保证数据完整性？
     1、数据按固定长度（默认512字节）来生成CRC校验和（4字节）。
     2、数据存储：datanode 收到数据后，检验成功了。才存储数据。并把数据转发给下一个datanode 节点。
     3、数据读取：客户端在收到数据后，也会验证CRC。如果验证成功，会给datanode发送数据片验证成功。datanode会更新此数据片的最后验证时间。

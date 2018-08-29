@@ -22,43 +22,39 @@ shell 中使用App 环境
     服务器server继承关系
     BaseServer-> TCPServer- > HTTPServer-> BaseWSGIServer
 
-实例化wsigserver 然后  运行server_forever() 
-server_forever() ：
-     1、清空线程事件
-     2、处理select 事件
-     3、_handle_request_noblock() 
+    实例化wsigserver 然后  运行server_forever() 
+    server_forever() ：
+         1、清空线程事件
+         2、处理select 事件
+         3、_handle_request_noblock() 
 
-_handle_request_noblock() ：
-1、socke.accecpt
-2、verify_request
-3、process_request
+    _handle_request_noblock() ：
+    1、socke.accecpt
+    2、verify_request
+    3、process_request
 
-process_request
-1、finshi_request(request,client_addr)
-2、 shutdown_reqeust(request)
+    process_request
+    1、finshi_request(request,client_addr)
+    2、 shutdown_reqeust(request)
 
-finish_request:
-     实例化一个wsgirequesthandler
+    finish_request:
+         实例化一个wsgirequesthandler
 
-处理函数继承关系
-BaseRequestHandler-> StreamRequestHandler-> BaseHTTPRequestHandler-> WSGIRequestHandler     
+    处理函数继承关系
+    BaseRequestHandler-> StreamRequestHandler-> BaseHTTPRequestHandler-> WSGIRequestHandler     
 
-wsgirequestHandler  实例化方法中调用  setup(). handler() , finish()
+    wsgirequestHandler  实例化方法中调用  setup(). handler() , finish()
 
- WSGIRequestHandler.handler -> WSGIRequestHandler.handle_one_request -> WSGIRequestHandler.run_wsgi
+     WSGIRequestHandler.handler -> WSGIRequestHandler.handle_one_request -> WSGIRequestHandler.run_wsgi
 
-run_wsgi():
+    run_wsgi():
 
-1、make_environ
-2、app(environ, start_response)  
+    1、make_environ
+    2、app(environ, start_response)  
 
-想要开发wsgi 服务器，只需要定义一个app 并且实现 __ call__ 方法即可。
-在flask 中 app.py 中的Flask 类定义中实现了 __call__ 方法 。
-在flask中 RequestContext 实例的match_request 方法 负责URL-> 到 endpoint 的映射工作。
-
-Map 
-
-Rule 
+    想要开发wsgi 服务器，只需要定义一个app 并且实现 __ call__ 方法即可。
+    在flask 中 app.py 中的Flask 类定义中实现了 __call__ 方法 。
+    在flask中 RequestContext 实例的match_request 方法 负责URL-> 到 endpoint 的映射工作。
 
 ## 多APP
     from werkzeug.wsgi import DispatcherMiddleware

@@ -1,15 +1,15 @@
-#kafuka
+# kafuka
 
 ## 简介
 Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消息系统。
 
-###性能优势：
+### 性能优势：
     - TB级消息持久化时间复杂度O(1)。顺序写硬盘。说明：内存中到一定阀值才flush到硬盘中。所以持久化不是立即的。
     - 高吞吐量 单机单进程100K/s 消息传输
     - 服务器间可以水平分区。分布式消费。保证分区内的信息是有序传输的。
     - 支持实时、异步 两种消息处理方式。
 
-###kafka 架构
+### kafka 架构
     - Broker  ，kafka把服务器称为broker
     - Topic 消息类别（消息队列）。可以理解为订阅的主题。一个消息必须属于某个主题。一个主题里的消息物理上可以分开存储（patrition）。逻辑上可以保存在多个broker 中。主题发布前需要定义好主题的内容格式（json格式的 key 名称，value 类型）。不符合格式的数据是发布不了的。
     - Partition  物理存储单元（文件夹）。序号从0开始
@@ -18,7 +18,7 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
     - Consumer Group  每个消费者属于一个特定的Consumer Group。
     - zookeeper   负责控制broker之间的partition 平衡。和consumer 间的消费平衡。
 
-###kafka 消息删除策略：
+### kafka 消息删除策略：
     - 基于时间             
     - 基于partition物理空间大小。
 
@@ -34,7 +34,7 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
         消息组播 就是说多个消费 隶属于不同的消费组。
         消息的单播 就是说一个消费一个消费组。
 
-###kafka消息分发类别
+### kafka消息分发类别
     - at most once  最多一次。可能丢失
     - at least one    可能多次，不会丢失
     - exactly once   肯定一次，不会丢失
@@ -44,13 +44,13 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
     消费者从broker pull数据时，根据当前消费组里的offset 来顺序读取消息。
     消费者可以选择是否修改这个offset.修改动作就是commit 。如果本次消费没有修改offset 那么下次依旧会消费这个条数据。
 
-###partition 分片备份机制。
+### partition 分片备份机制。
     为了提高数据可靠性。多个partition可以组成一个备份组。一个备份组有一个主，多个从。
     一个消息先发送给备份组里的主partition。 当这个消息被主partition 当前同步列表里的从partittion都复制了。就认为消息提交成功。
     注意：
         组内从partition 不会一起同步数据。只要主partition接到消息时，正在和主partittion 进行消息同步操作的所有从partition 都同步了当前消息。那么当前消息才算提交 发布 成功。主从更新采用的是批量更新的形式。
 
-####partition平衡算法：
+#### partition平衡算法：
     前提partition 数量大于broker 数量
     1、所有broker(N个) ，待分配partition（M个） 排序
     2、第I个partition分配到 i mod N 余数序号的broker中
@@ -59,10 +59,10 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
     Kafka选举一个broker作为controller，这个controller通过watch Zookeeper检测所有的broker failure，并负责为所有受影响的parition选举leader，再将相应的leader调整命令发送至受影响的broker，
     zookeeper 动态记录每个leader partition 的ISR(in-sync replicas)队列。只有在这个ISR队列中的partition 才有资格进行leader 选举。
 
-###consumer 消息平衡消费。
+### consumer 消息平衡消费。
     某个固定的partition 只会被固定的某个consumer消费。为了避免通信开销。
     平衡工作或者分配工作通过zookeeper操作的。
-####平衡步骤：
+#### 平衡步骤：
     - consumser 在 consumer group 中注册自己。
     - consumser 在 consumer group 给自己添加个观察事件 ，
         方便动态更新自己在 consumer group中的状态
@@ -77,7 +77,7 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
         4、将 i * N 到  (i+1) * N的 partition 分配给 Ct 集合中的第i个consumer
                         
 
-####调用API处理消息
+#### 调用API处理消息
     用户也可以调用底层api 自己实现读取消息行为。（Low level comsumper）
     优势：
         自己定义读取行为例如。
@@ -85,7 +85,7 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
         * 读取某个topic 的部分partition
         * 管理事务。
     劣势就是比较麻烦。
-####步骤：
+#### 步骤：
     - 找到一个可用的broker。并且找到涉及的的每个partition 的leader
     - 找出每个partition的follower
     - 定义好请求，描述如何获取数据。
@@ -97,23 +97,23 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
     下载地址：https://www.confluent.io/download-center/
     下载zip 文件然后解压。
 
-###文件结构
+### 文件结构
     * confluent-3.1.1/bin/        
         # Driver scripts for starting/stopping services
     * confluent-3.1.1/etc/        # Configuration files
     * confluent-3.1.1/share/java/ # Jars
-###命令
+### 命令
 #### 1、启动zookeeper 进程
    
     ./bin/zookeeper-server-start ./etc/kafka/zookeeper.properties
 
-####2、启动kafka进程
+#### 2、启动kafka进程
     ./bin/kafka-server-start ./etc/kafka/server.properties
 
-####3、启动注册器
+#### 3、启动注册器
     ./bin/schema-registry-start ./etc/schema-registry/schema-registry.properties
 
-####4、启动shell producter
+#### 4、启动shell producter
     ./bin/kafka-avro-console-produr --broker-list localhost:9092 --topic test --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"f1","type":"string"}]}’
     
     随后输入 
@@ -121,22 +121,22 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
     {‘f1’:’msggg’}
     crtl+c 关闭
 
-####5、启动shell consumer
+#### 5、启动shell consumer
     ./bin/kafka-avro-console-consumer --topic test --zookeeper localhost:2181 --from-beginning
     消费端会看到
     {‘f1’:’msgxx’}
     {‘f1’:’msggg’} 
     crtl + 关闭
 
-####6、定义一个topic
+#### 6、定义一个topic
     ./bin/kafka-avro-console-producer --broker-list localhost:9092,localhost:9093 -topic r_topic1 --property value.schema='{"type":"record","name":"r_topic1","fields":[{"name":"f1","type":"string"}]}'
 
-####7、查看分区情况
+#### 7、查看分区情况
     ./bin/kafka-topics --describe --zookeeper localhost:2181
     ./bin/kafka-topics --describe --zookeeper localhost:2181 --topic g_topic
 
 ## 配置文件
-###kafka  server 配置参数
+### kafka  server 配置参数
     
     broker.id = 0   #集群中的唯一标示 
     port = 9092     #默认监控地址
@@ -191,7 +191,7 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
     leader.imbalance.check.interval.seconds = xx # broker 平衡检查周期
     offset.metadata.max.bytes = xx # 客户端保留的offset信息。
 
-###生产者配置文件
+### 生产者配置文件
 
     client.id = xx  #  
     bootstrap.servers = xx # broker 节点信息 形如192.168.203.234:9092,xx
@@ -212,7 +212,7 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
     queue.enqueue.timeout.ms = -1 # 异步模式下进入队列等待时间 
     batch.num.messages = xx # 异步模式下批量发送信息的量。
 
-###消费者配置文件
+### 消费者配置文件
 
     group.id = xx # 消费组id
     consumer.id = xx # 当前消费者id

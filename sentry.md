@@ -1,5 +1,5 @@
-#sentry
-##sentry 是啥？
+# sentry
+## sentry 是啥？
     sentry是一个错误信息收集系统。既然是异常消息收集系统。那么高并发下的可靠性就不太能保证。这点要清楚。
     错误信息在sentry系统中的处理流程：
     web接受消息 -> 分发到redis队列/RabbitMQ -> celery 分发消息到worker 把消息回写到mysql -> mysql ->web展示 通过查询mysql展示数据
@@ -35,7 +35,7 @@
     7、在web中查看dns，在Python客户端中。添加测试数据。再页面中查看。
     8、删除过期数据  sentry cleanup --days=30
 
-##supervisord配置文件
+## supervisord配置文件
 
     [program:sentry-web]
     directory=/www/sentry/
@@ -102,24 +102,24 @@
 
 ## 杂记
 
-如何创建一个新的用户？
-    
-    sentry createuser
+    如何创建一个新的用户？
+        
+        sentry createuser
 
-如何创建一个项目？
-    用户分配项目？
-    用户权限分配？
+    如何创建一个项目？
+        用户分配项目？
+        用户权限分配？
 
-信息如何存储？
-    
-    消息存储在数据库中 sentry——message 表中
-如何分发信息？
-    
-    客户端在发送消息时指定具体项目。这个消息只存在于具体的某个项目中。项目之间互不干扰。
+    信息如何存储？
+        
+        消息存储在数据库中 sentry——message 表中
+    如何分发信息？
+        
+        客户端在发送消息时指定具体项目。这个消息只存在于具体的某个项目中。项目之间互不干扰。
 
-消息和event的关系？
-    
-    一个消息就是一个event
+    消息和event的关系？
+        
+        一个消息就是一个event
 
 ## 客户端
 

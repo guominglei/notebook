@@ -16,7 +16,7 @@
             import uvloop
             asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
-    但是http数据解析有点慢。可以使用 Httptools 
+    但是http数据解析有点慢(python解析)。可以使用 Httptools（c 语言写的）
     httptools: 
         pip 安装：pip install httptools
         源码：https://github.com/MagicStack/httptools.git

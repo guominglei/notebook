@@ -1,11 +1,11 @@
 # libevent libev libuv 区别
+    都是异步库
     libevent
         默认事件优先级相同。可以通过设置来更改。
-        通过优先级队列来完成事件循环（event_loop
+        通过优先级队列来完成事件循环（event_loop）
     libev
         默认事件优先级相同。可以通过设置来更改。
         通过优先级队列来完成事件循环（event_loop）
-
     libuv
         没有优先级概念。
         通过event_base来完成事件切换

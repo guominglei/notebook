@@ -66,7 +66,6 @@
             a byte = "A"
             b string = "B"
             d int = 1
-
         )
     # 自动推导类型
     const x = 1 #   x int = 1
@@ -523,6 +522,26 @@
     # map线程安全 
     # 
  
+## 协程
+    
+    Go在语言层面通过goroutine和channel支持了并发。
+    此概念源自Tony Hoare的CSP模式，它让程序员处理并发变得不再困难。
+
+    goroutine类似于操作系统的线程，
+    但其运行消耗的系统资源更小，每个goroutine仅需几KB的堆栈空间。
+    Go运行时可以在操作系统线程之上处理多路goroutine。
+    虽然在后台执行，但它对于程序员来说是可见的。单个程序拥有数千个goroutine也并不罕见。
+    比如，net/http软件包中的服务器程序针对每个HTTP请求都会创建一个goroutine。
+
+    在Go中启动goroutine非常简单，只需通过go关键字添加一个函数调用，
+    即可启动一个goroutine，并让该函数运行在自己的goroutine中。
+
+    Go有一句重要的格言，即：不要通过共享内存来通信，相反，通过通信来共享内存 。
+    Goroutine之间通过channel进行通信，channel的使用方法与goroutine一样简单。
+    Channel拥有类型，可以通过直观的箭头语法轻松实现goroutine之间的数据传递。
+    尽管channel使用简单，但是其功能非常强大。
+    在设计时只要预先稍作考虑，与传统的系统相比，使用Go便能够轻而易举地开发大规模并发系统。
+
 
 
 

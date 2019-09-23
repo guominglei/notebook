@@ -29,13 +29,13 @@ shell 中使用App 环境
          3、_handle_request_noblock() 
 
     _handle_request_noblock() ：
-    1、socke.accecpt
+    1、socket.accecpt
     2、verify_request
     3、process_request
 
     process_request
-    1、finshi_request(request,client_addr)
-    2、 shutdown_reqeust(request)
+    1、finish_request(request,client_addr)
+    2、shutdown_reqeust(request)
 
     finish_request:
          实例化一个wsgirequesthandler

@@ -5,6 +5,7 @@
 # python2 生成器，协程是一种写法。
 # python3之后生成器写法不变。
     协程在原有生成器的基础上添加了标志位。用来标识是生成器协程还是原生协程。
+
 # 生成器
     def Fibonacci(n):
         a, b = 0, 1
@@ -22,7 +23,6 @@
     原生协程被垃圾回收时，如果它从来没有被吊用过。会抛出RuntimeWarning.
     原生协程没有实现__iter__ 和 __next__ 方法
     生成器协程不能yield from 原生协程。 原生协程，生成器协程，不能混用
-
     原生协程，只能由 await 调用（如果对象定义了__await__方法就是 awaitable 对象）
 
 # python3 协程 concurrent
@@ -89,7 +89,6 @@
 ## _wakeup
     1、获取future 结果
     2、执行_step()
-
 
 # concurrent.futures.Fauture
 # asyncio.futures.Fature

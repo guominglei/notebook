@@ -37,7 +37,7 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
 ### kafka消息分发类别
     - at most once  最多一次。可能丢失
     - at least one    可能多次，不会丢失
-    - exactly once   肯定一次，不会丢失
+    - exactly once   肯定一次，不会丢失（broker幂等性 + consumer 幂等性）不是真正意义上的只有一次。
     
     生产者在push 数据到broker时，会生成一个主键。
     如果网络有问题，本次push(commit)不成功那么可以根据这个主键重复push(commit)
@@ -92,6 +92,8 @@ Linkedin 开源的可持久化，分布式 ，基于发布/订阅 模式的消�
     - 获取数据
     - 实时监控leader变化。做出相应的变化。
 
+## http restful 接口
+    confluent kafka-rest
 ## 初体验
 
     下载地址：https://www.confluent.io/download-center/

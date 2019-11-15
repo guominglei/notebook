@@ -1,7 +1,10 @@
 # prometheus 监控系统
 ## Python client 
     github: https://github.com/prometheus/client_python
-    pip: pip install pip install prometheus_client
+    pip: pip install prometheus_client
+    实现原理：
+        一个进程一个文件利用mmap技术快速写入。落盘交给系统脏页回写机制。
+        多进程数据集合根据指定目录下的文件。逐个读取。然后数据合并。
 
 ## 统计类型
 ### Histogram 直方图
@@ -127,3 +130,10 @@
       - url: "http://xxxx:8086/api/v1/prom/write?db=prometheus"
     # remote_read:
     #   - url: "http://xxxx:8086/api/v1/prom/read?db=prometheus"
+
+
+## 监控kafka
+    kafka_exporter
+    https://github.com/danielqsj/kafka_exporter#run-binary
+
+    逐个获取broker的

@@ -12,3 +12,6 @@
 
 ## 删除
    conda remove -n env-name --all 
+
+## 查看虚拟环境列表
+    conda info --envs 

@@ -72,7 +72,7 @@
     初始化task实例时候，会调用loop.call_soon(self._step) 
     把task._step包装成handler放入loop的ready 队列里。
 
-## _step() 方法开始执行具体工作。一直不太明白。呵呵
+## step() 方法开始执行具体工作。一直不太明白。呵呵
     1、result = coro.send(None)  向 func send(None)。让func开始工作。
     2、如果抛出stopIteration 异常，说明内部fature执行结束。结果返回了。
         调用set_result方法，
@@ -85,10 +85,9 @@
                 代表之前这个result是阻塞着的。
                 把_asyncio_future_blocking=False。
                 并把task._wakeup 注册到result的call_back 队列中。等待result运行结束后唤醒task
-
-## _wakeup
+##  wakeup
     1、获取future 结果
-    2、执行_step()
+    2、执行_step
 
 # concurrent.futures.Fauture
 # asyncio.futures.Fature
@@ -105,7 +104,7 @@
 
     aio Fature, 独有字段，_asyncio_future_blocking = False 用于在Task._step 中区分返回结果。
 
-## _scheddule_callbacks
+## scheddule_callbacks
     callbacks 队列置为空
     把原来callback添加到loop.ready 队列中。
 

@@ -34,7 +34,6 @@
 
 ### 读未提交  read uncommitted RN 
     不用，其他回话可以读到本回话内未提交的变动。
-    
 
 ### 读已提交 read committed  RC  不可重复读
     大部分数据库默认级别（oracle）。
@@ -43,7 +42,6 @@
 
     由于MySQL 默认级别是 可重复读 RR 更改事务隔离级别
     SET session transaction isolation level read committed;
-
 
 ### 可重复读 （repeatable read） RR 
     MVCC 技术实现的。innodb默认隔离级别。
@@ -57,7 +55,6 @@
 ### 串行化  
     最严。所有请求由并行化变为串行化。
     每次读写都要获取表级别的共享锁，写加排它锁，读写互相阻塞。
-
 
 ### 读
     快照读

@@ -135,6 +135,29 @@
     query 
         涉及到结果的评分。效率比filter查询慢。结果不缓存。
 
+## query_then_fetch 和 dfs_query_then_fetch
+    
+    主要是分片内数据量多少不均匀。导致的idf差异值不同
+
+    query_then_fetch：
+        1、发送查询到每个shard
+        2、找到所有匹配的文档，并使用本地的Term/Document Frequency信息进行打分
+        3、对结果构建一个优先队列（排序，标页等）
+        4、返回关于结果的元数据到请求节点。注意，实际文档还没有发送，只是分数
+        5、来自所有shard的分数合并起来，并在请求节点上进行排序，文档被按照查询要求进行选择
+        6、最终，实际文档从他们各自所在的独立的shard上检索出来
+        7、结果被返回给用户
+
+    dfs_query_then_fetch：
+        1、预查询每个shard，询问Term和Document frequency
+        2、发送查询到每隔shard
+        3、找到所有匹配的文档，并使用全局的Term/Document Frequency信息进行打分
+        4、对结果构建一个优先队列（排序，标页等）
+        5、返回关于结果的元数据到请求节点。注意，实际文档还没有发送，只是分数
+        6、来自所有shard的分数合并起来，并在请求节点上进行排序，文档被按照查询要求进行选择
+        7、最终，实际文档从他们各自所在的独立的shard上检索出来
+        8、结果被返回给用户
+
 
 ## es 下载
     mac 版本  https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.5.1-darwin-x86_64.tar.gz
@@ -406,8 +429,14 @@
         http://localhost:9200/index_name_alias/_alias/index_name
         method PUT
 
-        查看别名
-        http://localhost:9200/index_name/_alias/*
+        查看单个别名
+        GET http://localhost:9200/index_name/_alias/*
+
+        查看所有别名信息
+        GET http://localhost:9200/_aliases
+
+        注意：别名不能和现有的索引名称相同。
+
 
     9、零停机。进行索引替换
         http://localhost:9200/_aliases
@@ -430,11 +459,34 @@
     12、查看记录数
         http://localhost:9200/<index_name>/_count 
         method GET
+    
     13、查看当前机器上的索引情况
         http://localhost:9200/_cat/indices?v
 
     14、集群健康情况
         http://localhost:9200/_cluster/health
 
-    15、
+    15、查看索引设置信息
+        http://172.16.16.16:9200/<index_name>/_settings
 
+        更改索引设置
+        PUT http://172.16.16.16:9200/<index_name>/_settings
+        {
+            "index.blocks.read_only_allow_delete": null
+        }
+
+        当磁盘满的话。会报 read-only 错误。 再腾出磁盘空间后。再运行这个命令。
+
+    16、根据ID查看文档
+        http://172.16.16.16:9200/<index_name>/<type_name>/<id>
+        like: http://172.16.16.16:9200/collection_rick/collection/vHgUymfcwKx49_GiNE6cDQ
+
+    17、查看统计信息
+        http://localhost:9200/_stats | python -m json.tool    
+        格式化显示json数据
+
+        查看节点统计信息
+        http://localhost:9200/_nodes/stats | python -m json.tool 
+
+    18、查看等待中的任务
+        http://localhost:9200/_cluster/pending_tasks

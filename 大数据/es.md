@@ -150,7 +150,7 @@
 
     dfs_query_then_fetch：
         1、预查询每个shard，询问Term和Document frequency
-        2、发送查询到每隔shard
+        2、发送查询到每个shard
         3、找到所有匹配的文档，并使用全局的Term/Document Frequency信息进行打分
         4、对结果构建一个优先队列（排序，标页等）
         5、返回关于结果的元数据到请求节点。注意，实际文档还没有发送，只是分数
@@ -476,6 +476,7 @@
         }
 
         当磁盘满的话。会报 read-only 错误。 再腾出磁盘空间后。再运行这个命令。
+        curl -XPUT -H "Content-Type: application/json" http://10.10.10.10:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
 
     16、根据ID查看文档
         http://172.16.16.16:9200/<index_name>/<type_name>/<id>

@@ -178,7 +178,7 @@
     6、对列名进行过滤 。返回结果是列名的全称  列族:列名 形式的。  查找包含名称为xx 的子列。
         QualifierFilter(运算符， 规则) 
 
-    7、基于列名的范围进行过滤
+    7、基于列名的范围进行过滤 只返回符合条件的
         ColumnRangeFilter(start_value, 是否包含下限(ture/false), end_value, 是否包含上限(true/false))
 
     8、 只返回所有行。每行只返回第一个列。

@@ -47,3 +47,30 @@
         cv2.ADAPTIVE_THRESH_GAUSSIAN_C: 阀值取自相邻区域的加权和，权重为一个高斯窗口
 
 
+## 人脸识别
+
+## 生成模型
+
+    如何生成想要的模型
+    图片要灰度
+    图片大小：
+        w, h 是正样本图片的宽和高。 图片内容比例要正确。
+    参数如何调优。
+
+### 创建测试数据
+/usr/local/opt/opencv\@3/bin/opencv_createsamples -vec face.vec -info /Users/guo/cv2_train/pos/info.txt -w 100 -h 100 -n 14 -maxxangle 20 -maxyangle 20 -bgcolor 0 -bgthresh 0 -maxidev 40
+
+### 训练模型
+/usr/local/opt/opencv\@3/bin/opencv_traincascade -data /Users/guo/cv2_train/w50 -vec /Users/guo/cv2_train/w50/face.vec -bg /Users/guo/cv2_train/neg/info.dat -numPos 20 -numNeg 10 -numStages 10 -numThreads 6 -mode CORE -featureType LBP -w 100 -h 100 -precalcValBufSize 4096 -precalcIdxBufSize 4096 -minHitRate 0.999 -maxFalseAlarmRate 0.5 
+
+### 可视化查看图片匹配结果
+
+/usr/local/opt/opencv\@3/bin/opencv_visualisation --image=/Users/guo/Downloads/zrf_test/6.jpeg --model=/Users/guo/cv2_train/w20/cascade.xml --data=/Users/guo/cv2_train/w20/result/
+
+## 使用模型
+
+## 使用 face 额外库
+    默认Python没有安装额外的附加库
+    pip install opencv-contrib-python
+
+

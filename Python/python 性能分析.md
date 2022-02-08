@@ -12,8 +12,8 @@
 		
 		c - CPU flame graph  
 		p - profiler  
-	      m - memory graph  
-	      h - code heatmap  
+	    m - memory graph  
+	    h - code heatmap  
 
 
 ## 2、cProfile  

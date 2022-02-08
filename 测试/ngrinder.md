@@ -1,6 +1,6 @@
 # ngrinder
     github: http://naver.github.io/ngrinder/
-    带WEB节面，controller-agent分布式结构的强大的压力测试工具。
+    带WEB界面，controller-agent分布式结构的强大的压力测试工具。
 
 # 常用测试工具比较
     JMeter
